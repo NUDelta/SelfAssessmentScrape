@@ -1,6 +1,6 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from sets import Set
+
 # authorize gspread
 scope = ['https://spreadsheets.google.com/feeds']
 
@@ -53,12 +53,9 @@ def DTRProcess():
     # would be usefull to tally which cells are called on often b/w assessments
     # not using 11, 12, 13, 16, 20, 32
     not_agree_count = 0
-    # skip_list = Set([11, 12, 13, 16, 20, 32])
     rows = [2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 17, 18, 19,
     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
     sheet = spreadsheet.worksheet('DTR Process')
-    # for row in range(2, 35):
-    #     if row not in skip_list:
     for row in rows:
         prompt = sheet.acell('B%d' % row).value
         not_agree_dict = {'C': 'N/A or DID NOT DO THIS', 'D': 'STRONGLY DISAGREE', 'E': 'DISAGREE', 'F': 'NEITHER AGREE NOR DISAGREE'}
@@ -73,12 +70,9 @@ def ResearchProcess():
     # would be usefull to tally which cells are called on often b/w assessments
     # not using 2, 10, 11, 12, 16, 24, 25, 29
     not_agree_count = 0
-    # skip_list = Set([10, 11, 12, 16, 24, 25, 29])
     rows = [3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 17, 18, 19, 20, 21,
     22, 23, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37]
     sheet = spreadsheet.worksheet('Research Process')
-    # for row in range(3, 38):
-        # if row not in skip_list:
     for row in rows:
         prompt = sheet.acell('B%d' % row).value
         not_agree_dict = {'C': 'N/A or DID NOT DO THIS', 'D': 'STRONGLY DISAGREE', 'E': 'DISAGREE', 'F': 'NEITHER AGREE NOR DISAGREE'}
@@ -104,3 +98,8 @@ def AnalyzeSelfAssessment():
     Processes()
 
 AnalyzeSelfAssessment()
+
+# next steps:
+    # put the output in a format that'll be easy for people to read
+    # collect data on highest instances of "not agreeing"
+    # run for each self-assessment
