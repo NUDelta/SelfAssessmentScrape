@@ -178,11 +178,12 @@ def Processes(doc_id, name):
     start = 0
     end = len(prompt_list)
     wks = output_spreadsheet.worksheet(name)
-    cell_range = 'E4:E' + str(end+3)
+    cell_range = 'E2:E' + str(end+1)
     cell_list = wks.range(cell_range)
     count = 0
-    wks.update_acell('E1', 'Choose 5 behaviors from this list to prioritize working on this quarter')
-    wks.update_acell('E2', 'For each of these five behaviors, write one actionable step to take in order to improve, and reflect on what made it difficult for you to do this last quarter.')
+    wks.update_acell('F1', 'Choose at most 5 behaviors to prioritize this quarter')
+    wks.update_acell('G1', 'Actionable Step to Improve')
+    wks.update_acell('H1', 'What made this difficult last quarter?')
     for cell in cell_list:
         cell.value = prompt_list[count]
         count += 1
@@ -219,7 +220,7 @@ name_key_dict = {
 # Output for structured responses
 # for name in name_key_dict:
 #     Processes(name_key_dict[name], name)
-
+#
 def PreAndPostSurvey():
     pre_post_spreadsheet = gc.open_by_key('1HlwuH3OzX5ttvSZlZlnMNVahNfryucI25ksbKNbcZ48')
 
