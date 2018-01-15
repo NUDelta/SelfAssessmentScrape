@@ -165,8 +165,8 @@ def FreeResponses(doc_id, name):
         cell_list_a[cell].value = free_response_prompts[cell]
         cell_list_b[cell].value = free_response_responses[cell]
 
-    # wks.update_cells(cell_list_a)
-    # wks.update_cells(cell_list_b)
+    wks.update_cells(cell_list_a)
+    wks.update_cells(cell_list_b)
 
 
 
@@ -174,7 +174,7 @@ def Processes(doc_id, name):
     dtr_dict = DTRProcess(doc_id)
     research_dict = ResearchProcess(doc_id)
     agreement_dict = ['Strongly Disagree', 'Disagree', 'Neither Agree nor Disagree', 'NA']
-    prompt_list = [agreement_dict[0]] + dtr_dict[agreement_dict[0]] + research_dict[agreement_dict[0]] + ['', agreement_dict[1]] + dtr_dict[agreement_dict[1]] + research_dict[agreement_dict[1]] + ['', agreement_dict[2]] + dtr_dict[agreement_dict[2]] + research_dict[agreement_dict[2]] + ['', agreement_dict[3]] + dtr_dict[agreement_dict[3]] + research_dict[agreement_dict[3]] 
+    prompt_list = [agreement_dict[0]] + dtr_dict[agreement_dict[0]] + research_dict[agreement_dict[0]] + ['', agreement_dict[1]] + dtr_dict[agreement_dict[1]] + research_dict[agreement_dict[1]] + ['', agreement_dict[2]] + dtr_dict[agreement_dict[2]] + research_dict[agreement_dict[2]] + ['', agreement_dict[3]] + dtr_dict[agreement_dict[3]] + research_dict[agreement_dict[3]]
     start = 0
     end = len(prompt_list)
     wks = output_spreadsheet.worksheet(name)
@@ -198,7 +198,6 @@ name_key_dict = {
 'Allisun': '1yZa7YB0Q1A51HNfdR6JuBqH_-TehEZ9no44MuhmUrcg',
 'Jennie': '1gg3fhYYjuyVWkNHF6gT3Rh4nkeIlnGFiPmq8G9Z-XvA',
 'Meggy G': '1bAhVEe_E8IGJJzefQC12Bb6jX2KY4fdVeoCFgouxRMo',
-'Eli': '1fibZBBYdJXbRRbLLg3EGjS2PfF0e4eM2mfyUv26qPcQ',
 'Olivia': '1zkWZT9F0lBvGH2TYlyHauE2JXr7Iiywe_ypdhSqZmyY',
 'Ryan Louie': '1r71iz1MBOLSB03t5AZA5gyLQhP9okHEwmH99sNVq660',
 'Armaan': '1C8oID5OYgQ7SNR_emeP5DCmrsrdGd6lNkvO_yxsXbqg',
@@ -208,54 +207,59 @@ name_key_dict = {
 'yk': '14RWC5UKF_YkX45V0GAtsmp7P0UpK4lhNGSCI2Jgy4A0',
 'Grace': '1ZvSzlztZ5-8YgcsXHWX9GT1JpqzjJKSD56WT_6uG8ys',
 'Sehmon': '1bxNRyLRmf0jvwnkom4hPOchLhA7MA_nrUFF6zrmUqZE',
-'Morgan': '1r77yp-g50ke4o9Ku2WUXy-1ebtjyqwdttNZZOwfMiL8',
-'Jamie': '1OQf6_bKMd9sh05KFekI_vRYc0__TCDyrLDICHVp2iO4'
 }
+
 
 # Output for free responses
 # for name in name_key_dict:
 #     print name
 #     FreeResponses(name_key_dict[name], name)
 
+
 # Output for structured responses
 # for name in name_key_dict:
 #     Processes(name_key_dict[name], name)
 #
 def PreAndPostSurvey():
-    pre_post_spreadsheet = gc.open_by_key('1HlwuH3OzX5ttvSZlZlnMNVahNfryucI25ksbKNbcZ48')
+    pre_post_spreadsheet = gc.open_by_key('1GxUBwC7GJU9DXpj4387JGz6cIJLHJ5RYStF8Fz06uXA')
 
     name_array = [
-    'Nneoma', 'Leesha', 'Allison Lu', 'Megan', 'Jennie',
-    'Meggy G', 'Eli', 'Olivia', 'Ryan Louie',
-    'Armaan', 'Josh', 'Slim', 'Garrett', 'Allisun',
-    'yk', 'Grace', 'Sehmon','Morgan', 'Jamie'
+    'Leesha', 'Allison Lu', 'Megan',
+    'Meggy G', 'Olivia', 'Ryan Louie',
+    'Armaan', 'Josh', 'Slim', 'Garrett', 'yk',
+    'Grace', 'Sehmon', 'Allisun', 'Jennie', 'Nneoma'
     ]
 
-    pre_array = [
-    'How confident do you feel about the foreseen direction of sprint 1?', "What are some of your story ideas for sprint 1?"
-    ]
-
-    post_array = [
-    'Did this reflection give you a clearer idea of your direction for the next sprint or quarter?',
-    'Which reflection questions were most helpful in reminding you of your goals?',
-    'What are some story ideas for sprint 1 now?'
-    'Have those changed?',
-    'Why?'
-    ]
-
+    # make a new worksheet for each returning student
     for name in name_array:
-        wks = pre_post_spreadsheet.add_worksheet(title = name,  rows = "100", cols="20")
-        cell_list = wks.range('A1:')
+        wks = pre_post_spreadsheet.add_worksheet(title = name,  rows = "60", cols="20")
+
+        # pre survey questions
+        wks.update_acell('A1', 'Pre-Activity Questions')
+        wks.update_acell('A2', 'What were some of your weaknesses last quarter that you want to focus on improving this winter?')
+        wks.update_acell('A3', 'How confident do you feel about your ability to grow in those areas?')
+
+        # post survey questions
+        wks.update_acell('D1', 'Post-Activity Questions')
+        wks.update_acell('D2', 'After refelcting on your self-assessment, have your priorities for this quarter changed?')
+        wks.update_acell('D3', 'What are some actionable steps you can take to work on the weaknesses you listed in cell B3 this quarter?')
+        wks.update_acell('D4', 'How confident do you feel about your ability to work on your areas of weakness?')
+
+
+
+def Processes():
+    DTRProcess()
+    ResearchProcess()
 
 
 def AnalyzeSelfAssessment():
     FreeResponses()
     Processes()
 
+############ RUN 'EM ##########
 
+# for name in name_key_dict:
+#     print name
+#     FreeResponses(name_key_dict[name], name)
 
-
-# next steps:
-    # collect data on highest instances of "not agreeing"
-    # run for each self-assessment
-    # make faster if time
+PreAndPostSurvey()
