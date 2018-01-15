@@ -66,11 +66,16 @@ def GrowthFreeResponse(doc_id):
     return result
 
 
-def DTRProcess():
+def DTRProcess(doc_id):
     # not using 11, 12, 13, 16, 20, 32
     not_agree_count = 0
     rows = [2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 17, 18, 19,
     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
+    na_list = []
+    strong_da_list = []
+    da_list = []
+    neither_list = []
+    spreadsheet = gc.open_by_key(doc_id)
     sheet = spreadsheet.worksheet('DTR Process')
     for row in rows:
         prompt = sheet.acell('B%d' % row).value
@@ -78,15 +83,32 @@ def DTRProcess():
         for column in not_agree_dict.keys():
             val = sheet.acell('%c%d' % (column,row)).value
             if val: # if student answered anything other than agree or strongly agree, print the response and the propmt
-                print not_agree_dict[column] + ": " + prompt
+                if column is 'C':
+                    na_list.append(prompt)
+                elif column is 'D':
+                    strong_da_list.append(prompt)
+                elif column is 'E':
+                    da_list.append(prompt)
+                else:
+                    neither_list.append(prompt)
+                # print not_agree_dict[column] + ": " + prompt
                 not_agree_count += 1
-    print not_agree_count
+    # print not_agree_count
+    result = {'NA':na_list, 'Strongly Disagree':strong_da_list, 'Disagree':da_list, 'Neither Agree nor Disagree':neither_list}
+    return result
 
-def ResearchProcess():
+
+
+def ResearchProcess(doc_id):
     # not using 2, 10, 11, 12, 16, 24, 25, 29
     not_agree_count = 0
     rows = [3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 17, 18, 19, 20, 21,
     22, 23, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37]
+    na_list = []
+    strong_da_list = []
+    da_list = []
+    neither_list = []
+    spreadsheet = gc.open_by_key(doc_id)
     sheet = spreadsheet.worksheet('Research Process')
     for row in rows:
         prompt = sheet.acell('B%d' % row).value
@@ -94,11 +116,19 @@ def ResearchProcess():
         for column in not_agree_dict.keys():
             val = sheet.acell('%c%d' % (column,row)).value
             if val: # if student answered anything other than agree or strongly agree, print the response and the propmt
-                print not_agree_dict[column] + ": " + prompt
+                if column is 'C':
+                    na_list.append(prompt)
+                elif column is 'D':
+                    strong_da_list.append(prompt)
+                elif column is 'E':
+                    da_list.append(prompt)
+                else:
+                    neither_list.append(prompt)
+                # print not_agree_dict[column] + ": " + prompt
                 not_agree_count += 1
-    print not_agree_count
-
-
+    # print not_agree_count
+    result = {'NA':na_list, 'Strongly Disagree':strong_da_list, 'Disagree':da_list, 'Neither Agree nor Disagree':neither_list}
+    return result
 
 # output worksheet
 output_spreadsheet = gc.open_by_key('1qTcgo015pJfn-w-r4SyvrOYmQy3HC_XzzQy1TISsgqk')
@@ -114,7 +144,7 @@ def FreeResponses(doc_id, name):
     free_response_responses = dtr_dict['responses'] + lip_dict['responses'] + collab_dict['responses'] + growth_dict['responses']
 
     wks = output_spreadsheet.add_worksheet(title = name,  rows = "100", cols="20")
-    if doc_id != '1bxNRyLRmf0jvwnkom4hPOchLhA7MA_nrUFF6zrmUqZE' and doc_id != '1YfJN4Kk0hbAhGotqHMjECU2GNsh7NdPiP_U8NBPQAT0':
+    if doc_id != '1bxNRyLRmf0jvwnkom4hPOchLhA7MA_nrUFF6zrmUqZE' and doc_id != '1YfJN4Kk0hbAhGotqHMjECU2GNsh7NdPiP_U8NBPQAT0': # Exceptions for Sehmon and Slim - different format
         cell_list_a = wks.range('A1:A18')
         cell_list_b = wks.range('B1:B18')
         start = 1
@@ -138,6 +168,28 @@ def FreeResponses(doc_id, name):
     wks.update_cells(cell_list_a)
     wks.update_cells(cell_list_b)
 
+
+
+def Processes(doc_id, name):
+    dtr_dict = DTRProcess(doc_id)
+    research_dict = ResearchProcess(doc_id)
+    agreement_dict = ['Strongly Disagree', 'Disagree', 'Neither Agree nor Disagree', 'NA']
+    prompt_list = [agreement_dict[0]] + dtr_dict[agreement_dict[0]] + research_dict[agreement_dict[0]] + ['', agreement_dict[1]] + dtr_dict[agreement_dict[1]] + research_dict[agreement_dict[1]] + ['', agreement_dict[2]] + dtr_dict[agreement_dict[2]] + research_dict[agreement_dict[2]] + ['', agreement_dict[3]] + dtr_dict[agreement_dict[3]] + research_dict[agreement_dict[3]] 
+    start = 0
+    end = len(prompt_list)
+    wks = output_spreadsheet.worksheet(name)
+    cell_range = 'E2:E' + str(end+1)
+    cell_list = wks.range(cell_range)
+    count = 0
+    wks.update_acell('F1', 'Choose at most 5 behaviors to prioritize this quarter')
+    wks.update_acell('G1', 'Actionable Step to Improve')
+    wks.update_acell('H1', 'What made this difficult last quarter?')
+    for cell in cell_list:
+        cell.value = prompt_list[count]
+        count += 1
+    wks.update_cells(cell_list)
+
+
 name_key_dict = {
 'Nneoma': '1a4-t-LI_IwfcM02byKARwBcU5-nIEMzFy_ohy_rtp1Q',
 'Leesha': '1EZPz5BdxfYThDkiB599awrZvI_TVdYJiTjgA8Dk48qY',
@@ -157,7 +209,18 @@ name_key_dict = {
 'Sehmon': '1bxNRyLRmf0jvwnkom4hPOchLhA7MA_nrUFF6zrmUqZE',
 }
 
+<<<<<<< HEAD
+=======
+# Output for free responses
+# for name in name_key_dict:
+#     print name
+#     FreeResponses(name_key_dict[name], name)
+>>>>>>> 2a58101adf61d563781623252aef0dd91b6a2760
 
+# Output for structured responses
+# for name in name_key_dict:
+#     Processes(name_key_dict[name], name)
+#
 def PreAndPostSurvey():
     pre_post_spreadsheet = gc.open_by_key('1GxUBwC7GJU9DXpj4387JGz6cIJLHJ5RYStF8Fz06uXA')
 
@@ -184,9 +247,12 @@ def PreAndPostSurvey():
         wks.update_acell('D4', 'How confident do you feel about your ability to work on your areas of weakness?')
 
 
+<<<<<<< HEAD
 def Processes():
     DTRProcess()
     ResearchProcess()
+=======
+>>>>>>> 2a58101adf61d563781623252aef0dd91b6a2760
 
 def AnalyzeSelfAssessment():
     FreeResponses()
