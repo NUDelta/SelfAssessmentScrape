@@ -209,7 +209,6 @@ name_key_dict = {
 'Sehmon': '1bxNRyLRmf0jvwnkom4hPOchLhA7MA_nrUFF6zrmUqZE',
 }
 
-
 # Output for free responses
 # for name in name_key_dict:
 #     print name
@@ -245,12 +244,9 @@ def PreAndPostSurvey():
         wks.update_acell('D3', 'What are some actionable steps you can take to work on the weaknesses you listed in cell B3 this quarter?')
         wks.update_acell('D4', 'How confident do you feel about your ability to work on your areas of weakness?')
 
-
-
 def Processes():
     DTRProcess()
     ResearchProcess()
-
 
 def AnalyzeSelfAssessment():
     FreeResponses()
